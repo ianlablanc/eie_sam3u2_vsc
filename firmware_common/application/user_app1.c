@@ -92,6 +92,15 @@ Promises:
 */
 void UserApp1Initialize(void)
 {
+  LedOff(WHITE);
+  LedOff(RED);
+  LedOff(ORANGE);
+  LedOff(YELLOW);
+  LedOff(GREEN);
+  LedOff(CYAN);
+  LedOff(BLUE);
+  LedOff(PURPLE);
+
   /* If good initialization, set state to Idle */
   if( 1 )
   {
@@ -140,7 +149,63 @@ State Machine Function Definitions
 /* What does this state do? */
 static void UserApp1SM_Idle(void)
 {
-     
+  static LedRateType aeBlinkRate[] = {LED_1HZ, LED_2HZ, LED_4HZ, LED_8HZ};
+  static u8 u8BlinkRateIndex = 0;
+  static bool bLedBlink = FALSE;
+  
+  if (IsButtonPressed(BUTTON0))
+  {
+    LedOn(WHITE);
+  }
+
+  else
+  {
+    LedOff(WHITE);
+  }
+
+  if (WasButtonPressed(BUTTON1))
+  {
+    ButtonAcknowledge(BUTTON1);
+    if (bLedBlink)
+    {
+      bLedBlink = FALSE;
+      LedOff(YELLOW);
+    }
+    
+    else
+    {
+      bLedBlink = TRUE;
+      LedBlink(YELLOW, aeBlinkRate[u8BlinkRateIndex]);
+    }
+  }
+
+  if (IsButtonHeld(BUTTON3, 2000))
+  {
+    LedOn(CYAN);
+  }
+
+  else
+  {
+    LedOff(CYAN);
+  }
+
+  if (WasButtonPressed(BUTTON2))
+  {
+    ButtonAcknowledge(BUTTON2);
+    if (bLedBlink)
+    {
+      u8BlinkRateIndex++;
+      if (u8BlinkRateIndex == 4)
+      {
+        u8BlinkRateIndex = 0;
+      }
+      LedBlink(YELLOW, aeBlinkRate[u8BlinkRateIndex]);
+    }
+  }
+
+  
+
+
 } /* end UserApp1SM_Idle() */
      
 
